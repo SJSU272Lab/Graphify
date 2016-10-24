@@ -1,0 +1,8 @@
+Pyhton:
+
+https://console.ng.bluemix.net/data/notebooks/930ec553-8612-4a07-af01-5810baf6e317/view?access_token=1d090898637666fb61ea17213715e9f4b72a24b324e3eed666842673e00d6122
+
+
+Scala:
+
+https://console.ng.bluemix.net/data/notebooks/d66d8f7e-33df-45b9-a079-573ac87a820e/view?access_token=f0b4099fb727749be30966eb2ff37e78ba34334929327eceec27cd3fc46686aa
