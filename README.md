@@ -16,3 +16,7 @@ Although Graph theory of storage is becoming de facto solution to today’s need
 
 1. As a user with no DB background I want to be able to create new Graph DB just by using drag and drop utilities
 2. As a user I want to be able to migrate my existing relational DB to Graph DB
+
+Flow diag:
+
+![Version 1](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/flow_diag_v1.jpeg)
