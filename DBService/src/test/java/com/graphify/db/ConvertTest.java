@@ -1,5 +1,7 @@
 package com.graphify.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.graphify.db.client.ibm.graph.IBMGraphClient;
 import com.graphify.db.model.ibm.graph.GraphSchema;
 import com.graphify.db.model.ibm.graph.Property;
@@ -7,19 +9,39 @@ import com.graphify.db.model.mysql.Constraint;
 import com.graphify.db.model.mysql.Schema;
 import com.graphify.db.model.mysql.Table;
 import com.graphify.db.resource.DBServiceResource;
+import com.graphify.db.rule.engine.ForeignKeyBasedStrategy;
+import com.graphify.db.rule.engine.Strategy;
 import com.graphify.db.util.CSVUtil;
 import com.graphify.db.util.ServiceUtil;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Sushant on 23-11-2016.
  */
 public class ConvertTest {
     public static void main(String[] args) {
+        //addData();
+        convert();
+    }
+
+    public static void convert() {
+        Strategy strategy = new ForeignKeyBasedStrategy();
+        DBServiceResource dbService = new DBServiceResource();
+        Schema schema = (Schema) dbService.getSchemaExpense().getEntity();
+        GraphSchema graphSchema = strategy.convert(schema);
+        //System.out.println(graphSchema);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(graphSchema);
+            System.out.println(jsonInString);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void addData() {
         DBServiceResource dbService = new DBServiceResource();
         Schema schema = (Schema) dbService.getSchemaExpense().getEntity();
         //System.out.println(test.getClass().getCanonicalName() + " " + schema);
@@ -34,7 +56,8 @@ public class ConvertTest {
 
 
         //This is if you wish to transform the Table to Edge
-        Map<String, String> tableEdgeMap = new HashMap<>();
+        //Not yet required for implemented strategy based on foreign key
+        //Map<String, String> tableEdgeMap = new HashMap<>();
 
 
         //Ordering matters when dealing with tables with foreign keys
@@ -101,7 +124,6 @@ public class ConvertTest {
             }
         }
     }
-
     private static void addEdge(List<Constraint> foreignConstraints, String vertexName, String[] row, Map<String, String> edgeNames, Schema schema, Map<String, Integer> columnIndex) {
         for (Constraint constraint: foreignConstraints) {
             //System.out.println(ConvertTest.class.getCanonicalName() + " For vertex " + vertexName);

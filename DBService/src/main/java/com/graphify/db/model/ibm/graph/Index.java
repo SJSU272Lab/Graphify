@@ -1,5 +1,6 @@
 package com.graphify.db.model.ibm.graph;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 //@JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Index {
     private String name;
     private List<String> propertyKeys;
@@ -17,6 +19,7 @@ public class Index {
     private Boolean unique;
     private Boolean requiresReindex;
     private String type;
+    private String indexOnly;
 
     public Index() {
     }
@@ -69,6 +72,14 @@ public class Index {
         this.type = type;
     }
 
+    public String getIndexOnly() {
+        return indexOnly;
+    }
+
+    public void setIndexOnly(String indexOnly) {
+        this.indexOnly = indexOnly;
+    }
+
     @Override
     public String toString() {
         return "Index{" +
@@ -78,6 +89,7 @@ public class Index {
                 ", unique=" + unique +
                 ", requiresReindex=" + requiresReindex +
                 ", type='" + type + '\'' +
+                ", indexOnly='" + indexOnly + '\'' +
                 '}';
     }
 }

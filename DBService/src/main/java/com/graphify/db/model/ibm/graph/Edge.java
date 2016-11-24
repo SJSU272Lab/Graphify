@@ -1,7 +1,5 @@
 package com.graphify.db.model.ibm.graph;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**

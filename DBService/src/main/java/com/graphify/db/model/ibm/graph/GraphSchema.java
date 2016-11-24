@@ -1,6 +1,7 @@
 package com.graphify.db.model.ibm.graph;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,14 @@ public class GraphSchema {
     private List<Index> edgeIndexes;
 
     public GraphSchema() {
+    }
+
+    public void init() {
+        propertyKeys = new ArrayList<>();
+        vertexLabels = new ArrayList<>();
+        edgeLabels = new ArrayList<>();
+        vertexIndexes = new ArrayList<>();
+        edgeIndexes = new ArrayList<>();
     }
 
     public List<Property> getPropertyKeys() {
