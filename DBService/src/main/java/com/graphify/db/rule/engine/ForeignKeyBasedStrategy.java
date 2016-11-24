@@ -63,26 +63,26 @@ public class ForeignKeyBasedStrategy implements Strategy {
                 graphIndex.setComposite(true);
                 graphIndex.setUnique(true); //As this is primary key
                 graphSchema.getVertexIndexes().add(graphIndex);
-            } else {
-                for (com.graphify.db.model.mysql.Index index : table.getIndexes()) {
-                    if (!index.getIndexName().equals("PRIMARY")) {
-                        Index graphIndex = new Index();
-                        graphIndex.setName("vBy" + index.getIndexName().toLowerCase());
-                        List<String> propertyKeys = new ArrayList<>();
-                        propertyKeys.add(index.getColumn());
-                        graphIndex.setPropertyKeys(propertyKeys);
-                        graphIndex.setComposite(true);
-                        graphIndex.setUnique(false); //As this is primary key
-                        //Index only for this vertex as in case of foreign key
-                        //it may create duplicate indexes one for this vertex
-                        //and other for reference table of the foreign key
-                        graphIndex.setIndexOnly(vertex.getName());
-                        graphSchema.getVertexIndexes().add(graphIndex);
-                    }
+            }
+            for (com.graphify.db.model.mysql.Index index : table.getIndexes()) {
+                if (!index.getIndexName().equals("PRIMARY")) {
+                    Index graphIndex = new Index();
+                    graphIndex.setName("vBy_" + table.getName().toLowerCase() + "_" + index.getIndexName().toLowerCase());
+                    List<String> propertyKeys = new ArrayList<>();
+                    propertyKeys.add(index.getColumn().toLowerCase());
+                    graphIndex.setPropertyKeys(propertyKeys);
+                    graphIndex.setComposite(true);
+                    graphIndex.setUnique(false);
+                    //Index only for this vertex as in case of foreign key
+                    //it may create duplicate indexes one for this vertex
+                    //and other for reference table of the foreign key
+                    graphIndex.setIndexOnly(vertex.getName());
+                    graphSchema.getVertexIndexes().add(graphIndex);
                 }
             }
-
         }
+
+
         return graphSchema;
     }
 }

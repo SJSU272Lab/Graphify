@@ -51,9 +51,21 @@ public class IBMGraphClient {
 
     public GraphSchema getGraphSchema()
     {
-        IBMGraphClient ibmGraphClient = new IBMGraphClient();
         initialize();
         return getSchema();
+    }
+
+    public void createNewGraph(String graphName)
+    {
+        initialize();
+        createGraph(graphName);
+    }
+
+    public void createGraphSchema(GraphSchema graphSchema, String graphName)
+    {
+        initialize();
+        apiURL = "https://ibmgraph-alpha.ng.bluemix.net/"+instanceID+"/"+graphName;
+        createSchema(graphSchema);
     }
 
     private void doWork()
@@ -109,13 +121,13 @@ public class IBMGraphClient {
         }
     }
 
-    private void createSchema() {
+    private void createSchema(GraphSchema graphSchema) {
         //I could have used class loader to get the file from resources folder but, yeah, I'm lazy
         String schemaFileName = "./src/main/resources/graph/expense.json";
         FileReader schemaFileReader;
         try {
-            schemaFileReader = new FileReader(schemaFileName);
-            JSONObject postData = new JSONObject(schemaFileReader);
+            JSONObject postData = new JSONObject(graphSchema);
+            System.out.println(IBMGraphClient.class.getCanonicalName()+" Posting at "+apiURL + "/schema\n"+ " data: \n"+ postData.toString());
             HttpPost httpPost = new HttpPost(apiURL + "/schema");
             httpPost.setHeader("Authorization", gdsTokenAuth);
             httpPost.setHeader("Content-Type", "application/json");
@@ -125,6 +137,7 @@ public class IBMGraphClient {
             HttpResponse httpResponse = client.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             String content = EntityUtils.toString(httpEntity);
+            System.out.println(IBMGraphClient.class.getCanonicalName()+" response content "+content);
             EntityUtils.consume(httpEntity);
             JSONObject jsonContent = new JSONObject(content);
             JSONObject result = jsonContent.getJSONObject("result");

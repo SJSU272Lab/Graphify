@@ -21,11 +21,20 @@ import java.util.*;
  */
 public class ConvertTest {
     public static void main(String[] args) {
+        String graphName = "testgraphschema";
+        GraphSchema graphSchema =  convert();
+        createGraphAndSchema(graphSchema, graphName);
         //addData();
-        convert();
+
     }
 
-    public static void convert() {
+    public static void createGraphAndSchema(GraphSchema graphSchema, String graphName) {
+        IBMGraphClient client = new IBMGraphClient();
+        client.createNewGraph(graphName);
+        client.createGraphSchema(graphSchema, graphName);
+    }
+
+    public static GraphSchema convert() {
         Strategy strategy = new ForeignKeyBasedStrategy();
         DBServiceResource dbService = new DBServiceResource();
         Schema schema = (Schema) dbService.getSchemaExpense().getEntity();
@@ -34,11 +43,11 @@ public class ConvertTest {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(graphSchema);
-            System.out.println(jsonInString);
+            //System.out.println(jsonInString);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
+        return graphSchema;
     }
 
     public static void addData() {
