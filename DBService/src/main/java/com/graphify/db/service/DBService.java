@@ -1,6 +1,6 @@
 package com.graphify.db.service;
 
-import com.graphify.db.model.Schema;
+import com.graphify.db.model.mysql.Schema;
 
 /**
  * Created by Sushant on 22-11-2016.

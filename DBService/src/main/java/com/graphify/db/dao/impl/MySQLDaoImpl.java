@@ -2,7 +2,7 @@ package com.graphify.db.dao.impl;
 
 import com.graphify.db.dao.DBDao;
 import com.graphify.db.dao.util.DaoUtil;
-import com.graphify.db.model.*;
+import com.graphify.db.model.mysql.*;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.graphify.db.model;
+package com.graphify.db.model.mysql;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;

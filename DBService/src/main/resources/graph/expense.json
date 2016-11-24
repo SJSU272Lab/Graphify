@@ -1,0 +1,27 @@
+{
+  "propertyKeys": [
+    {"name": "id", "dataType": "Integer", "cardinality": "SINGLE"},
+    {"name": "descr", "dataType": "String", "cardinality": "SINGLE"},
+    {"name": "name", "dataType": "String", "cardinality": "SINGLE"},
+    {"name": "email", "dataType": "String", "cardinality": "SINGLE"},
+    {"name": "estimated_cost", "dataType": "Integer", "cardinality": "SINGLE"},
+    {"name": "submit_date", "dataType": "Integer", "cardinality": "SINGLE"}
+  ],
+  "vertexLabels": [
+    {"name": "entity"},
+    {"name": "expense"},
+    {"name": "status"},
+    {"name": "expense_category"}
+  ],
+  "edgeLabels": [
+    {"name": "initiated", "multiplicity": "MULTI"},
+    {"name": "has_status", "multiplicity": "MULTI"},
+    {"name": "of_category", "multiplicity": "MULTI"}
+  ],
+  "vertexIndexes": [
+    {"name": "vById",
+      "propertyKeys": ["id"],
+      "composite": true,
+      "unique": false}
+  ]
+}

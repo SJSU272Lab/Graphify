@@ -1,6 +1,6 @@
 package com.graphify.db.resource;
 
-import com.graphify.db.model.Schema;
+import com.graphify.db.model.mysql.Schema;
 import com.graphify.db.service.DBService;
 import com.graphify.db.service.impl.DBServiceImpl;
 

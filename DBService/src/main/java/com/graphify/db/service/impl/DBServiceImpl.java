@@ -3,7 +3,7 @@ package com.graphify.db.service.impl;
 import com.graphify.db.dao.DBDao;
 import com.graphify.db.dao.impl.MySQLDaoImpl;
 import com.graphify.db.dao.util.DaoUtil;
-import com.graphify.db.model.Schema;
+import com.graphify.db.model.mysql.Schema;
 import com.graphify.db.service.DBService;
 
 /**

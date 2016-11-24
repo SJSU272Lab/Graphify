@@ -1,0 +1,5 @@
+STATUS_ID,STATUS_DESCR
+1,pending
+2,approved
+3,rejected
+4,overbudget
