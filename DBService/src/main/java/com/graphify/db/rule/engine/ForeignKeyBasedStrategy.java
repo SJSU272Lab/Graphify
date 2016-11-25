@@ -64,8 +64,10 @@ public class ForeignKeyBasedStrategy implements Strategy {
                 graphIndex.setUnique(true); //As this is primary key
                 graphSchema.getVertexIndexes().add(graphIndex);
             }
+            // Vertex won't have the foreign keys as property
+            // so no need to add index on columns other than primary key
             for (com.graphify.db.model.mysql.Index index : table.getIndexes()) {
-                if (!index.getIndexName().equals("PRIMARY")) {
+                if (!(index.getIndexName().equals("PRIMARY") || ServiceUtil.isForeignKey(index.getColumn(), table))) {
                     Index graphIndex = new Index();
                     graphIndex.setName("vBy_" + table.getName().toLowerCase() + "_" + index.getIndexName().toLowerCase());
                     List<String> propertyKeys = new ArrayList<>();

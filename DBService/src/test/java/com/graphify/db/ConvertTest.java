@@ -20,12 +20,12 @@ import java.util.*;
  * Created by Sushant on 23-11-2016.
  */
 public class ConvertTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JsonProcessingException {
         String graphName = "testgraphschema";
-        GraphSchema graphSchema =  convert();
+        GraphSchema graphSchema = convert();
+        //System.out.print(ConvertTest.class.getName() + " Converted schema\n " + new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(graphSchema));
         createGraphAndSchema(graphSchema, graphName);
         //addData();
-
     }
 
     public static void createGraphAndSchema(GraphSchema graphSchema, String graphName) {
@@ -124,7 +124,7 @@ public class ConvertTest {
                 for (String[] row : tableContent) {
                     String vertexName = addVertex(tableVertexMap.get(tableName), row, columnIndex, mapData.get(tableName), graphSchema, table);
                     //System.out.println(ConvertTest.class.getCanonicalName() + " needsEdge " +needsEdge);
-                    if(needsEdge) {
+                    if (needsEdge) {
                         addEdge(foreignConstraints, vertexName, row, edgeNames, schema, columnIndex);
                     }
                 }
@@ -133,15 +133,16 @@ public class ConvertTest {
             }
         }
     }
+
     private static void addEdge(List<Constraint> foreignConstraints, String vertexName, String[] row, Map<String, String> edgeNames, Schema schema, Map<String, Integer> columnIndex) {
-        for (Constraint constraint: foreignConstraints) {
+        for (Constraint constraint : foreignConstraints) {
             //System.out.println(ConvertTest.class.getCanonicalName() + " For vertex " + vertexName);
             String edgeName = edgeNames.get(constraint.getName());
             //System.out.println(ConvertTest.class.getCanonicalName() + " For edge name " + edgeName);
             StringBuffer command = new StringBuffer();
-            if(edgeName!= null && !edgeName.isEmpty()) {
+            if (edgeName != null && !edgeName.isEmpty()) {
                 command.append(vertexName).append(".addEdge('").append(edgeName).append("',");
-                if(isForeignPrimaryOfSource(constraint, schema)) {
+                if (isForeignPrimaryOfSource(constraint, schema)) {
                     //System.out.println(ConvertTest.class.getCanonicalName() + " Row data " + row[columnIndex.get(constraint.getColumn())]);
                     command.append(constraint.getRefTable().toLowerCase()).append("_").append(row[columnIndex.get(constraint.getColumn())]).append(");");
                 }
@@ -156,11 +157,11 @@ public class ConvertTest {
         String refColumn = constraint.getRefColumn();
         //TODO: Check if above two are valid
         Table table = ServiceUtil.getMySQLTableByName(refTable, schema);
-        if(table != null) {
+        if (table != null) {
             List<Constraint> primaries = ServiceUtil.getPrimaries(table);
             for (Constraint primary : primaries) {
                 //Just to be sure applying toLower
-                if(refColumn.toLowerCase().equals(primary.getColumn().toLowerCase())) {
+                if (refColumn.toLowerCase().equals(primary.getColumn().toLowerCase())) {
                     //System.out.println(ConvertTest.class.getCanonicalName() + " Got primary ");
                     return true;
                 }

@@ -1,5 +1,7 @@
 package com.graphify.db.model.ibm.graph;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -7,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 //@JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Edge {
     private String name;
     private String multiplicity;
