@@ -5,13 +5,16 @@ import com.graphify.db.model.ibm.graph.Index;
 import com.graphify.db.model.mysql.*;
 import com.graphify.db.util.ServiceUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Sushant on 24-11-2016.
  */
 public class ForeignKeyBasedStrategy implements Strategy {
+
+    public ForeignKeyBasedStrategy() {
+
+    }
 
     @Override
     public GraphSchema convert(Schema schema) {
@@ -83,8 +86,6 @@ public class ForeignKeyBasedStrategy implements Strategy {
                 }
             }
         }
-
-
         return graphSchema;
     }
 }

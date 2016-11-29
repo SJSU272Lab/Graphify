@@ -1,6 +1,7 @@
 package com.graphify.db.resource;
 
 import com.graphify.db.model.mysql.Schema;
+import com.graphify.db.model.mysql.Validate;
 import com.graphify.db.service.DBService;
 import com.graphify.db.service.impl.DBServiceImpl;
 
@@ -17,28 +18,28 @@ import javax.ws.rs.core.Response;
 public class DBServiceResource {
     DBService dbService = new DBServiceImpl();
 
-    /*@GET
-    @Path("/{host}/{user}/{password}/{schemaName}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getSchema(@PathParam("host")String host,@PathParam("user") String user, @PathParam("password") String password, @PathParam("schemaName") String schemaName) {
-        System.out.println("In the method");
-        String url = String.format("jdbc:mysql://{0}/{3}?user={1}&password={2}", host, user, password, schemaName);
-        System.out.println(url);
-        Schema schema = dbService.getDBSchema(url, schemaName);
-        return Response.ok()
-                .entity(schema)
-                .build();
-    }*/
-
     @GET
-    @Path("/")
+    @Path("/schema")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSchemaExpense() {
         //TODO Currently being hard coded will be sent as a parameter
-        String url = "jdbc:mysql://localhost:3306/expense?user=root&password=admin";
+        String url = "jdbc:mysql://localhost:3306/expense?user=root&password=admin&autoReconnect=true&useSSL=false";
         Schema schema = dbService.getDBSchema(url, "expense");
         return Response.ok()
                 .entity(schema)
+                .build();
+    }
+
+    @GET
+    @Path("/validate")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response validateFiles() {
+        //TODO Currently being hard coded will be sent as a parameter
+        String url = "jdbc:mysql://localhost:3306/expense?user=root&password=admin&autoReconnect=true&useSSL=false";
+        String fileLocation = "D:/DevEnv/Fall16-Team12/DBService/src/main/resources/mysql";
+        Validate validate = dbService.validateSchema(url, "expense", fileLocation);
+        return Response.ok()
+                .entity(validate)
                 .build();
     }
 }

@@ -28,7 +28,7 @@ public class CSVUtil {
         //Always expecting it to be in /mysql folder and in caps
         CSVReader csvReader = null;
         try {
-            csvReader = new CSVReader(new FileReader(classLoader.getResource("./mysql/" + fileName.toUpperCase()+".csv").getPath()));
+            csvReader = new CSVReader(new FileReader(classLoader.getResource("./mysql/" + fileName.toUpperCase() + ".csv").getPath()));
             String[] nextLine;
             if ((nextLine = csvReader.readNext()) != null) {
                 //return first line
@@ -39,9 +39,42 @@ public class CSVUtil {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                csvReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
+
+
+    public static String[] getHeaderFromSource(String file) {
+        CSVReader csvReader = null;
+        try {
+            csvReader = new CSVReader(new FileReader(file));
+            String[] nextLine;
+            if ((nextLine = csvReader.readNext()) != null) {
+                //return first line
+                //System.out.println(CSVUtil.class.getCanonicalName() + " returning header of size "+ nextLine.length);
+                return nextLine;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (csvReader != null)
+                    csvReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 
     public static List<String[]> getContent(String fileName) {
         // Getting ClassLoader obj
@@ -50,7 +83,7 @@ public class CSVUtil {
         CSVReader csvReader = null;
         List<String[]> content = new ArrayList<>();
         try {
-            csvReader = new CSVReader(new FileReader(classLoader.getResource("./mysql/" + fileName.toUpperCase()+".csv").getPath()));
+            csvReader = new CSVReader(new FileReader(classLoader.getResource("./mysql/" + fileName.toUpperCase() + ".csv").getPath()));
             String[] nextLine;
             if ((csvReader.readNext()) != null) {  //Skip first line
                 while ((nextLine = csvReader.readNext()) != null) {
@@ -63,6 +96,12 @@ public class CSVUtil {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                csvReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

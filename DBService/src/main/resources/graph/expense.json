@@ -1,27 +1,41 @@
 {
-  "propertyKeys": [
-    {"name": "id", "dataType": "Integer", "cardinality": "SINGLE"},
-    {"name": "descr", "dataType": "String", "cardinality": "SINGLE"},
-    {"name": "name", "dataType": "String", "cardinality": "SINGLE"},
-    {"name": "email", "dataType": "String", "cardinality": "SINGLE"},
-    {"name": "estimated_cost", "dataType": "Integer", "cardinality": "SINGLE"},
-    {"name": "submit_date", "dataType": "Integer", "cardinality": "SINGLE"}
+  "propertyKeys" : [
+    { "name" : "entity_id", "dataType" : "Integer", "cardinality" : "SINGLE"},
+    { "name" : "name", "dataType" : "String", "cardinality" : "SINGLE"},
+    { "name" : "email", "dataType" : "String", "cardinality" : "SINGLE"},
+    { "name" : "expense_id", "dataType" : "Integer", "cardinality" : "SINGLE"},
+    { "name" : "item_descr", "dataType" : "String", "cardinality" : "SINGLE"},
+    { "name" : "item_link", "dataType" : "String", "cardinality" : "SINGLE"},
+    { "name" : "estimated_cost", "dataType" : "Integer", "cardinality" : "SINGLE"},
+    { "name" : "submit_date", "dataType" : "String", "cardinality" : "SINGLE"},
+    { "name" : "expense_category_id", "dataType" : "Integer", "cardinality" : "SINGLE"},
+    { "name" : "exp_cat_descr", "dataType" : "String", "cardinality" : "SINGLE"},
+    { "name" : "t1id", "dataType" : "Integer", "cardinality" : "SINGLE"},
+    { "name" : "t2id", "dataType" : "Integer", "cardinality" : "SINGLE"},
+    { "name" : "status_id", "dataType" : "Integer", "cardinality" : "SINGLE"},
+    { "name" : "status_descr", "dataType" : "String", "cardinality" : "SINGLE" }
   ],
-  "vertexLabels": [
-    {"name": "entity"},
-    {"name": "expense"},
-    {"name": "status"},
-    {"name": "expense_category"}
+  "vertexLabels" : [
+    { "name" : "entity"},
+    { "name" : "expense"},
+    { "name" : "expense_category"},
+    { "name" : "infotable"},
+    { "name" : "status" }
   ],
-  "edgeLabels": [
-    {"name": "initiated", "multiplicity": "MULTI"},
-    {"name": "has_status", "multiplicity": "MULTI"},
-    {"name": "of_category", "multiplicity": "MULTI"}
+  "edgeLabels" : [
+    { "name" : "entity_expense", "multiplicity" : "MULTI"},
+    { "name" : "expense_category_expense", "multiplicity" : "MULTI"},
+    { "name" : "status_expense", "multiplicity" : "MULTI"}
   ],
-  "vertexIndexes": [
-    {"name": "vById",
-      "propertyKeys": ["id"],
-      "composite": true,
-      "unique": false}
-  ]
+  "vertexIndexes" : [
+    { "name" : "vByPrimary_entity", "propertyKeys" : [ "entity_id" ], "composite" : true, "unique" : true},
+    { "name" : "vByPrimary_expense", "propertyKeys" : [ "expense_id" ], "composite" : true, "unique" : true},
+    { "name" : "vBy_expense_entity_id", "propertyKeys" : [ "entity_id" ], "composite" : true, "unique" : false, "indexOnly" : "expense"},
+    { "name" : "vBy_expense_expense_category_id", "propertyKeys" : [ "expense_category_id" ], "composite" : true, "unique" : false, "indexOnly" : "expense"},
+    { "name" : "vBy_expense_status_id", "propertyKeys" : [ "status_id" ], "composite" : true, "unique" : false, "indexOnly" : "expense"},
+    { "name" : "vByPrimary_expense_category", "propertyKeys" : [ "expense_category_id" ], "composite" : true, "unique" : true},
+    { "name" : "vByPrimary_info", "propertyKeys" : [ "t1id", "t2id" ], "composite" : true, "unique" : true},
+    { "name" : "vByPrimary_status", "propertyKeys" : [ "status_id" ], "composite" : true, "unique" : true }
+  ],
+  "edgeIndexes" : [ ]
 }

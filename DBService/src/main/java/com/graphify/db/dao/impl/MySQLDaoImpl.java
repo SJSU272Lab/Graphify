@@ -60,7 +60,7 @@ public class MySQLDaoImpl implements DBDao {
         Schema schema = new Schema();
         schema.setName(schemaName);
         try {
-            statement = connection.prepareStatement(GET_TABLES);
+            statement = connection.prepareStatement(GET_TABLES);  //Handle exception if MySQL isn't up
             statement.setString(1, schemaName);
             if (statement.execute()) {
                 resultSet = statement.getResultSet();
@@ -152,7 +152,7 @@ public class MySQLDaoImpl implements DBDao {
 
     public static void main(String[] args) {
         Connection connection = DaoUtil.getConnection("jdbc:mysql://localhost/expense?" +
-                "user=root&password=admin");
+                "user=remoteuser&password=remoteuser");
         MySQLDaoImpl impl = new MySQLDaoImpl();
         Schema schema = impl.getSchema(connection, "expense");
         System.out.println(schema);

@@ -16,7 +16,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileReader;
 import java.io.IOException;
 
 /**
@@ -49,10 +48,10 @@ public class IBMGraphClient {
     }
 
 
-    public GraphSchema getGraphSchema()
+    public GraphSchema getGraphSchema(String graphName)
     {
         initialize();
-        return getSchema();
+        return getSchema(graphName);
     }
 
     public void createNewGraph(String graphName)
@@ -73,7 +72,7 @@ public class IBMGraphClient {
         initialize();
         //createGraph("graphify");
         //createSchema();
-        getSchema();
+        //getSchema("graphify");
     }
 
 
@@ -121,18 +120,18 @@ public class IBMGraphClient {
         }
     }
 
-    private void createSchema(GraphSchema graphSchema) {
-        //I could have used class loader to get the file from resources folder but, yeah, I'm lazy
-        String schemaFileName = "./src/main/resources/graph/expense.json";
-        FileReader schemaFileReader;
+
+    public void addData(String graphName, String command) {
+       String postEntity = "{\"gremlin\":\"".concat(command).concat("\"}").replaceAll("(\\r|\\n)", "");
+        initialize();
         try {
-            JSONObject postData = new JSONObject(graphSchema);
-            System.out.println(IBMGraphClient.class.getCanonicalName()+" Posting at "+apiURL + "/schema\n"+ " data: \n"+ postData.toString());
-            HttpPost httpPost = new HttpPost(apiURL + "/schema");
+            apiURL = restifyURL + "/"+graphName+"/gremlin";
+            //System.out.println(IBMGraphClient.class.getCanonicalName()+" Posting at "+apiURL + " data: \n"+ postEntity);
+            HttpPost httpPost = new HttpPost(apiURL);
             httpPost.setHeader("Authorization", gdsTokenAuth);
             httpPost.setHeader("Content-Type", "application/json");
             httpPost.setHeader("Accept", "application/json");
-            StringEntity strEnt = new StringEntity(postData.toString(), ContentType.APPLICATION_JSON);
+            StringEntity strEnt = new StringEntity(postEntity, ContentType.APPLICATION_JSON);
             httpPost.setEntity(strEnt);
             HttpResponse httpResponse = client.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
@@ -148,12 +147,41 @@ public class IBMGraphClient {
             }
         }catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Schema creation failed");
+            //System.out.println("Schema creation failed");
         }
     }
 
-    private GraphSchema getSchema() {
+    private void createSchema(GraphSchema graphSchema) {
         try {
+            JSONObject postData = new JSONObject(graphSchema);
+            //System.out.println(IBMGraphClient.class.getCanonicalName()+" Posting at "+apiURL + "/schema\n"+ " data: \n"+ postData.toString());
+            HttpPost httpPost = new HttpPost(apiURL + "/schema");
+            httpPost.setHeader("Authorization", gdsTokenAuth);
+            httpPost.setHeader("Content-Type", "application/json");
+            httpPost.setHeader("Accept", "application/json");
+            StringEntity strEnt = new StringEntity(postData.toString(), ContentType.APPLICATION_JSON);
+            httpPost.setEntity(strEnt);
+            HttpResponse httpResponse = client.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            String content = EntityUtils.toString(httpEntity);
+            //System.out.println(IBMGraphClient.class.getCanonicalName()+" response content "+content);
+            EntityUtils.consume(httpEntity);
+            JSONObject jsonContent = new JSONObject(content);
+            JSONObject result = jsonContent.getJSONObject("result");
+            JSONArray data = result.getJSONArray("data");
+            if (data.length() > 0) {
+                JSONObject response = data.getJSONObject(0);
+                System.out.println("response from creating schema" + response);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            //System.out.println("Schema creation failed");
+        }
+    }
+
+    private GraphSchema getSchema(String graphName) {
+        try {
+            apiURL = "https://ibmgraph-alpha.ng.bluemix.net/"+instanceID+"/"+graphName;
             HttpGet httpGet = new HttpGet(apiURL + "/schema");
             httpGet.setHeader("Authorization", gdsTokenAuth);
             httpGet.setHeader("Accept", "application/json");
@@ -179,7 +207,6 @@ public class IBMGraphClient {
                 }
         } catch (Exception e) {
             e.printStackTrace();
-            //System.out.println("Schema creation failed");
         }
         return null;
     }
