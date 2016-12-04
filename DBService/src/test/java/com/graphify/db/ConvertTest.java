@@ -23,6 +23,9 @@ import java.util.Map;
  * Created by Sushant on 23-11-2016.
  */
 public class ConvertTest {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/expense?user=root&password=admin&autoReconnect=true&useSSL=false";
+    private static final String DB_SCHEMA = "expense";
+
     public static void main(String[] args) throws JsonProcessingException {
         String graphName = "testgraphschema6";
         //GraphSchema graphSchema = convert();
@@ -36,7 +39,7 @@ public class ConvertTest {
 
     private static void addDataUsingMapper(StringBuffer commandString) {
         DBServiceResource dbService = new DBServiceResource();
-        Schema schema = (Schema) dbService.getSchemaExpense().getEntity();
+        Schema schema = (Schema) dbService.getSchemaExpense(DB_URL, DB_SCHEMA).getEntity();
         //System.out.println(test.getClass().getCanonicalName() + " " + schema);
         IBMGraphClient client = new IBMGraphClient();
         GraphSchema graphSchema = client.getGraphSchema("testgraphschema1");
@@ -87,7 +90,7 @@ public class ConvertTest {
     public static GraphSchema convert() {
         Strategy strategy = new ForeignKeyBasedStrategy();
         DBServiceResource dbService = new DBServiceResource();
-        Schema schema = (Schema) dbService.getSchemaExpense().getEntity();
+        Schema schema = (Schema) dbService.getSchemaExpense(DB_URL, DB_SCHEMA).getEntity();
         GraphSchema graphSchema = strategy.convert(schema);
         //System.out.println(graphSchema);
         ObjectMapper mapper = new ObjectMapper();

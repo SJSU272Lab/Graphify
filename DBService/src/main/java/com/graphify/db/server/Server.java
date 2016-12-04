@@ -11,7 +11,7 @@ import java.net.URI;
  * Created by Sushant on 22-11-2016.
  */
 public class Server {
-    private static final String BASE_URI = "http://localhost:8080/";
+    private static final String BASE_URI = "http://localhost:8081/";
 
     public static HttpServer startServer() {
         final ResourceConfig rc = new ResourceConfig().packages("com.graphify.db")
