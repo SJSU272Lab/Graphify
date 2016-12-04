@@ -71,6 +71,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.graphify.db</groupId>
+            <artifactId>db-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 	</dependencies>
     
 	<build>

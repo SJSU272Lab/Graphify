@@ -1,6 +1,7 @@
-package com.cmpe.graphify.client;
+package com.graphify.db.client;
 
-import com.cmpe.graphify.util.StringUtil;
+import com.graphify.db.model.mysql.Validate;
+import com.graphify.db.util.StringUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -44,7 +45,9 @@ public class ServiceClient {
             JSONObject jsonContent = new JSONObject(content);
             isValid = jsonContent.getBoolean("valid");
             message = jsonContent.getString("message");
-            validate = new Validate(isValid, message);
+            validate = new Validate();
+            validate.setValid(isValid);
+            validate.setMessage(message);
         } catch (Exception e) {
             e.printStackTrace();
         }

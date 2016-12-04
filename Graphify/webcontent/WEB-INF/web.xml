@@ -12,7 +12,7 @@
       
     <filter>
         <filter-name>nocachefilter</filter-name>
-        <filter-class>com.cmpe.graphify.filter.NocacheFilter</filter-class>
+        <filter-class>com.graphify.db.filter.NocacheFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>nocachefilter</filter-name>

@@ -1,4 +1,4 @@
-package com.cmpe.graphify.filter;
+package com.graphify.db.filter;
 
 import java.io.IOException;
 

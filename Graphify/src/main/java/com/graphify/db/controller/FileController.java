@@ -1,8 +1,9 @@
-package com.cmpe.graphify.controller;
+package com.graphify.db.controller;
 
-import com.cmpe.graphify.client.ServiceClient;
-import com.cmpe.graphify.client.Validate;
-import com.cmpe.graphify.util.ZipUtil;
+import com.graphify.db.client.LocalClient;
+import com.graphify.db.client.ServiceClient;
+import com.graphify.db.model.mysql.Validate;
+import com.graphify.db.util.ZipUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
@@ -30,7 +31,7 @@ public class FileController {
         InputStream stream = multipartFile.getInputStream();
         File file = new File("D:\\"+multipartFile.getOriginalFilename());
         multipartFile.transferTo(file);
-        System.out.println(" file "+ file.getAbsolutePath());
+        System.out.println("file "+ file.getAbsolutePath());
 
         String host = request.getParameter("host");
         String port = request.getParameter("port");
@@ -46,19 +47,20 @@ public class FileController {
         String outputDir = "D:\\readDir\\"+ Long.toString(System.currentTimeMillis());
         ZipUtil.unZipIt(file.getAbsolutePath(), outputDir);
 
-        ServiceClient serviceClient = new ServiceClient("localhost", 8000, db);
-        Validate validate = serviceClient.validate(url, outputDir);
+        /*ServiceClient serviceClient = new ServiceClient("localhost", 8081, db);
+        Validate validate = serviceClient.validate(url, outputDir);*/
+
+        LocalClient localClient = new LocalClient();
+        localClient.validate(url, outputDir, db);
+        Validate validate = localClient.validate(url, outputDir, db);
 
         System.out.println(validate);
-
         byte[] bytes = IOUtils.toByteArray(stream);
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("fileoriginalsize", size);
         map.put("contenttype", contentType);
         map.put("base64", new String(Base64Utils.encode(bytes)));
-
-
 
         return map;
     }

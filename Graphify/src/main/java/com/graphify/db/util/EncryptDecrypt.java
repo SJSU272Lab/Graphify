@@ -1,4 +1,4 @@
-package com.cmpe.graphify.util;
+package com.graphify.db.util;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;

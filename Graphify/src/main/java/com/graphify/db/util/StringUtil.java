@@ -1,4 +1,4 @@
-package com.cmpe.graphify.util;
+package com.graphify.db.util;
 
 /**
  * Created by Sushant on 01-12-2016.

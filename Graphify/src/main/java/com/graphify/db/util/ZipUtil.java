@@ -1,4 +1,4 @@
-package com.cmpe.graphify.util;
+package com.graphify.db.util;
 
 import java.io.*;
 import java.util.List;
