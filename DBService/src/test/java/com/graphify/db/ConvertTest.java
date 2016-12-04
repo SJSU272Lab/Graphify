@@ -25,13 +25,13 @@ import java.util.Map;
 public class ConvertTest {
     public static void main(String[] args) throws JsonProcessingException {
         String graphName = "testgraphschema6";
-        GraphSchema graphSchema = convert();
-        System.out.print(ConvertTest.class.getName() + " Converted schema\n " + new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(graphSchema));
-        createGraphAndSchema(graphSchema, graphName);
+        //GraphSchema graphSchema = convert();
+        //System.out.print(ConvertTest.class.getName() + " Converted schema\n " + new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(graphSchema));
+        //createGraphAndSchema(graphSchema, graphName);
         StringBuffer commandString = new StringBuffer();
         addDataUsingMapper(commandString);
         System.out.print(ConvertTest.class.getName() + " Add data Gremlin\n" + commandString);
-        addData(graphName, commandString.toString());
+        //addData(graphName, commandString.toString());
     }
 
     private static void addDataUsingMapper(StringBuffer commandString) {

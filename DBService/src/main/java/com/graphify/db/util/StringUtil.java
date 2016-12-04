@@ -1,4 +1,4 @@
-package com.song.example.util;
+package com.graphify.db.util;
 
 /**
  * Created by Sushant on 01-12-2016.
@@ -11,6 +11,7 @@ public class StringUtil {
         str = str.replace("/", "%2F");
         str = str.replace("\\", "%5C");
         str = str.replace("=", "%3D");
+        str = str.replace("&", "%26");
         return str;
     }
 
@@ -20,6 +21,8 @@ public class StringUtil {
         str = str.replace( "%2F", "/");
         str = str.replace("%5C", "\\");
         str = str.replace("%3D","=");
+        str = str.replace("%26","&");
+
         return str;
     }
 }
