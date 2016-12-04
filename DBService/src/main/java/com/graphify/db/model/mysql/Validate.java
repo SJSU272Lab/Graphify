@@ -18,7 +18,7 @@ public class Validate {
         isValid = valid;
     }
 
-    public String isMessage() {
+    public String getMessage() {
         return message;
     }
 
