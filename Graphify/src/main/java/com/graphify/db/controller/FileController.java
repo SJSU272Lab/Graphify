@@ -2,9 +2,12 @@ package com.graphify.db.controller;
 
 import com.graphify.db.client.LocalClient;
 import com.graphify.db.client.ServiceClient;
+import com.graphify.db.model.ibm.graph.GraphSchema;
 import com.graphify.db.model.mysql.Validate;
+import com.graphify.db.util.DatabaseCredentials;
 import com.graphify.db.util.ZipUtil;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
@@ -21,8 +25,11 @@ import java.util.HashMap;
 @Controller
 public class FileController {
 
-    @RequestMapping(value = "/echofile", method = RequestMethod.POST, produces = {"application/json"})
-    public @ResponseBody HashMap<String, Object> echoFile(MultipartHttpServletRequest request,
+    @Autowired
+    private DatabaseCredentials databaseCredentials;
+
+    @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = {"application/json"})
+    public @ResponseBody HashMap<String, Object> validate(MultipartHttpServletRequest request,
                                                           HttpServletResponse response) throws Exception {
         System.out.println("In controller");
         MultipartFile multipartFile = request.getFile("file");
@@ -47,20 +54,45 @@ public class FileController {
         String outputDir = "D:\\readDir\\"+ Long.toString(System.currentTimeMillis());
         ZipUtil.unZipIt(file.getAbsolutePath(), outputDir);
 
+        databaseCredentials.setHost(request.getParameter("host"));
+        databaseCredentials.setPort(request.getParameter("port"));
+        databaseCredentials.setUser(request.getParameter("user"));
+        databaseCredentials.setPass(request.getParameter("password"));
+        databaseCredentials.setDb(request.getParameter("db"));
+        databaseCredentials.setUrl(url);
+        databaseCredentials.setOutputDir(outputDir);
+
         /*ServiceClient serviceClient = new ServiceClient("localhost", 8081, db);
         Validate validate = serviceClient.validate(url, outputDir);*/
 
         LocalClient localClient = new LocalClient();
-        localClient.validate(url, outputDir, db);
         Validate validate = localClient.validate(url, outputDir, db);
 
         System.out.println(validate);
         byte[] bytes = IOUtils.toByteArray(stream);
 
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("fileoriginalsize", size);
         map.put("contenttype", contentType);
         map.put("base64", new String(Base64Utils.encode(bytes)));
+        map.put("message", validate.getMessage());
+        map.put("isValid", validate.isValid());
+
+        return map;
+    }
+
+    @RequestMapping(value = "/conadd", method = RequestMethod.POST, produces = {"application/json"})
+    public @ResponseBody HashMap<String, Object> convert(HttpServletRequest request,
+                                                          HttpServletResponse response) throws Exception {
+
+        LocalClient localClient = new LocalClient();
+        GraphSchema graphSchema = localClient.conAdd(databaseCredentials.getUrl(), databaseCredentials.getOutputDir(), databaseCredentials.getDb());
+
+        System.out.println(graphSchema);
+
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("contenttype",  request.getContentType());
 
         return map;
     }
