@@ -143,7 +143,7 @@ public class IBMGraphClient {
             JSONArray data = result.getJSONArray("data");
             if (data.length() > 0) {
                 JSONObject response = data.getJSONObject(0);
-                System.out.println("response from creating schema" + response);
+                System.out.println("response from adding data" + response);
             }
         }catch (Exception e) {
             e.printStackTrace();

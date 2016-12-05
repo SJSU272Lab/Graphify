@@ -92,7 +92,7 @@
 
                 }).fail(function (jqXHR, textStatus) {
                     //alert(jqXHR.responseText);
-                    alert('File upload failed ...');
+                    alert('File upload failed ...'+ '<%=baseUrl%>api/validate');
                 });
 
             });

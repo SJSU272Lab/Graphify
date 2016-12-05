@@ -34,7 +34,7 @@
     <context-param>
         <param-name>BaseUrl</param-name>
           <param-value>
-            http://localhost:8080/
+            http://localhost:8080/graphify/
           </param-value>
     </context-param>
     

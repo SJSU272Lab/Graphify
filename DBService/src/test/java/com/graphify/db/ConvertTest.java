@@ -25,24 +25,25 @@ import java.util.Map;
 public class ConvertTest {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/expense?user=root&password=admin&autoReconnect=true&useSSL=false";
     private static final String DB_SCHEMA = "expense";
+    private static final ClassLoader CLASS_LOADER = ConvertTest.class.getClassLoader();
 
     public static void main(String[] args) throws JsonProcessingException {
-        String graphName = "testgraphschema6";
+        String graphName = "testgraphschema7";
         GraphSchema graphSchema = convert();
         System.out.print(ConvertTest.class.getName() + " Converted schema\n " + new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(graphSchema));
-        //createGraphAndSchema(graphSchema, graphName);
+        createGraphAndSchema(graphSchema, graphName);
         StringBuffer commandString = new StringBuffer();
         addDataUsingMapper(commandString);
         System.out.print(ConvertTest.class.getName() + " Add data Gremlin\n" + commandString);
-        //addData(graphName, commandString.toString());
+        addData(graphName, commandString.toString());
     }
 
     private static void addDataUsingMapper(StringBuffer commandString) {
         DBServiceResource dbService = new DBServiceResource();
-        Schema schema = (Schema) dbService.getSchemaExpense(DB_URL, DB_SCHEMA).getEntity();
+        Schema schema = (Schema) dbService.getSchema(DB_URL, DB_SCHEMA).getEntity();
         //System.out.println(test.getClass().getCanonicalName() + " " + schema);
         IBMGraphClient client = new IBMGraphClient();
-        GraphSchema graphSchema = client.getGraphSchema("testgraphschema1");
+        GraphSchema graphSchema = client.getGraphSchema("testgraphschema7");
         //System.out.println(ConvertTest.class.getCanonicalName() + " " +graphSchema);
         Mapper mapper = new Mapper(schema);
 
@@ -51,20 +52,20 @@ public class ConvertTest {
             //System.out.println(test.getClass().getCanonicalName() + " Got table " + table.getName());
             Boolean needsEdge = false;
             List<Constraint> foreignConstraints = ServiceUtil.getForeignKeys(table);
-
             if (foreignConstraints.size() > 0) {
                 needsEdge = true;
             }
 
             if (table != null) {
-                String[] columnIndexArray = CSVUtil.getHeader(tableName);
+                CLASS_LOADER.getResource("./mysql/").getPath();
+                String[] columnIndexArray = CSVUtil.getHeader(CLASS_LOADER.getResource("./mysql/").getPath(), tableName);
 
                 Map<String, Integer> columnIndex = new HashMap<>();
                 for (int i = 0; i < columnIndexArray.length; i++) {
                     columnIndex.put(columnIndexArray[i].toLowerCase(), i);
                 }
 
-                List<String[]> tableContent = CSVUtil.getContent(tableName);
+                List<String[]> tableContent = CSVUtil.getContent(CLASS_LOADER.getResource("./mysql/").getPath(), tableName);
                 for (String[] row : tableContent) {
                     String vertexName = addVertex(mapper.getTableVertexMap().get(tableName), row, columnIndex, mapper.getMapData().get(tableName), graphSchema, table, commandString);
                     //System.out.println(ConvertTest.class.getCanonicalName() + " needsEdge " +needsEdge);
@@ -90,7 +91,7 @@ public class ConvertTest {
     public static GraphSchema convert() {
         Strategy strategy = new ForeignKeyBasedStrategy();
         DBServiceResource dbService = new DBServiceResource();
-        Schema schema = (Schema) dbService.getSchemaExpense(DB_URL, DB_SCHEMA).getEntity();
+        Schema schema = (Schema) dbService.getSchema(DB_URL, DB_SCHEMA).getEntity();
         GraphSchema graphSchema = strategy.convert(schema);
         //System.out.println(graphSchema);
         ObjectMapper mapper = new ObjectMapper();
@@ -105,7 +106,7 @@ public class ConvertTest {
 
     /*public static void addData() {
         DBServiceResource dbService = new DBServiceResource();
-        Schema schema = (Schema) dbService.getSchemaExpense().getEntity();
+        Schema schema = (Schema) dbService.getSchema().getEntity();
         //System.out.println(test.getClass().getCanonicalName() + " " + schema);
         IBMGraphClient client = new IBMGraphClient();
         GraphSchema graphSchema = client.getGraphSchema("graphify");

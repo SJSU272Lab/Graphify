@@ -7,6 +7,7 @@ import com.graphify.db.model.mysql.Validate;
 import com.graphify.db.util.DatabaseCredentials;
 import com.graphify.db.util.ZipUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
@@ -24,21 +25,28 @@ import java.util.HashMap;
 
 @Controller
 public class FileController {
-
+    private Logger logger = Logger.getLogger(FileController.class);
     @Autowired
     private DatabaseCredentials databaseCredentials;
 
     @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = {"application/json"})
     public @ResponseBody HashMap<String, Object> validate(MultipartHttpServletRequest request,
                                                           HttpServletResponse response) throws Exception {
-        System.out.println("In controller");
+        logger.info("In controller");
         MultipartFile multipartFile = request.getFile("file");
         Long size = multipartFile.getSize();
         String contentType = multipartFile.getContentType();
         InputStream stream = multipartFile.getInputStream();
-        File file = new File("D:\\"+multipartFile.getOriginalFilename());
+        File file;
+        if(System.getProperty("os.name").contains("Windows")) {
+            file = new File("D:\\" + multipartFile.getOriginalFilename());
+        }
+        else {
+            file = new File("/usr/" + multipartFile.getOriginalFilename());
+        }
         multipartFile.transferTo(file);
-        System.out.println("file "+ file.getAbsolutePath());
+        logger.info("file "+ file.getAbsolutePath());
+
 
         String host = request.getParameter("host");
         String port = request.getParameter("port");
@@ -49,9 +57,13 @@ public class FileController {
         String url = "jdbc:mysql://%s:%s/%s?user=%s&password=%s&autoReconnect=true&useSSL=false";
         url = String.format(url, host, port, db, user, pass);
 
-        System.out.println(url +" file "+ file.getAbsolutePath());
+        logger.info(url +" file "+ file.getAbsolutePath());
+        String outputDir;
+        if(System.getProperty("os.name").contains("Windows"))
+            outputDir = "D:\\readDir\\"+ Long.toString(System.currentTimeMillis());
+        else
+            outputDir = "/usr/readDir/"+ Long.toString(System.currentTimeMillis());
 
-        String outputDir = "D:\\readDir\\"+ Long.toString(System.currentTimeMillis());
         ZipUtil.unZipIt(file.getAbsolutePath(), outputDir);
 
         databaseCredentials.setHost(request.getParameter("host"));
@@ -68,7 +80,7 @@ public class FileController {
         LocalClient localClient = new LocalClient();
         Validate validate = localClient.validate(url, outputDir, db);
 
-        System.out.println(validate);
+        logger.info(validate);
         byte[] bytes = IOUtils.toByteArray(stream);
 
         HashMap<String, Object> map = new HashMap<>();
@@ -88,7 +100,7 @@ public class FileController {
         LocalClient localClient = new LocalClient();
         GraphSchema graphSchema = localClient.conAdd(databaseCredentials.getUrl(), databaseCredentials.getOutputDir(), databaseCredentials.getDb());
 
-        System.out.println(graphSchema);
+        logger.info(graphSchema);
 
 
         HashMap<String, Object> map = new HashMap<>();

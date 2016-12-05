@@ -59,7 +59,7 @@ public class ZipUtil {
             zis.closeEntry();
             zis.close();
 
-            System.out.println("Done");
+            System.out.println(ZipUtil.class.getCanonicalName() +" Done");
 
         } catch (Exception ex) {
             ex.printStackTrace();
