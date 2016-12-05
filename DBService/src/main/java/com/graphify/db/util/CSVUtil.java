@@ -14,7 +14,7 @@ public class CSVUtil {
     public static void main(String[] args) throws IOException {
         // Getting ClassLoader obj
         ClassLoader classLoader = CSVUtil.class.getClassLoader();
-        CSVReader csvReader = new CSVReader(new FileReader(classLoader.getResource("./mysql/ENTITY.csv").getPath()));
+        CSVReader csvReader = new CSVReader(new FileReader(classLoader.getResource("./mysql/entity.csv").getPath()));
         String[] nextLine;
         while ((nextLine = csvReader.readNext()) != null) {
             // nextLine[] is an array of values from the line
@@ -51,7 +51,12 @@ public class CSVUtil {
     public static String[] getHeaderFromSource(String fileLocation, String fileName) {
         CSVReader csvReader = null;
         try {
-            csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName.toUpperCase() + ".csv"));
+            if(System.getProperty("os.name").contains("Windows")) {
+                csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName + ".csv"));
+            }
+            else {
+                csvReader = new CSVReader(new FileReader(fileLocation + "/" + fileName + ".csv"));
+            }
             String[] nextLine;
             if ((nextLine = csvReader.readNext()) != null) {
                 //return first line
@@ -79,7 +84,12 @@ public class CSVUtil {
         CSVReader csvReader = null;
         List<String[]> content = new ArrayList<>();
         try {
-            csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName.toUpperCase() + ".csv"));
+            if(System.getProperty("os.name").contains("Windows")) {
+                csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName + ".csv"));
+            }
+            else {
+                csvReader = new CSVReader(new FileReader(fileLocation + "/" + fileName + ".csv"));
+            }
             String[] nextLine;
             if ((csvReader.readNext()) != null) {  //Skip first line
                 while ((nextLine = csvReader.readNext()) != null) {
