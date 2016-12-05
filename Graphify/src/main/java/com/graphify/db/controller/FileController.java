@@ -42,7 +42,7 @@ public class FileController {
             file = new File("D:\\" + multipartFile.getOriginalFilename());
         }
         else {
-            file = new File("/usr/" + multipartFile.getOriginalFilename());
+            file = new File("/usr/local/" + multipartFile.getOriginalFilename());
         }
         multipartFile.transferTo(file);
         logger.info("file "+ file.getAbsolutePath());
@@ -62,7 +62,7 @@ public class FileController {
         if(System.getProperty("os.name").contains("Windows"))
             outputDir = "D:\\readDir\\"+ Long.toString(System.currentTimeMillis());
         else
-            outputDir = "/usr/readDir/"+ Long.toString(System.currentTimeMillis());
+            outputDir = "/usr/local/readDir/"+ Long.toString(System.currentTimeMillis());
 
         ZipUtil.unZipIt(file.getAbsolutePath(), outputDir);
 
