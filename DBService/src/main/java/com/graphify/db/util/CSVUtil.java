@@ -23,10 +23,14 @@ public class CSVUtil {
     }
 
     public static String[] getHeader(String fileLocation, String fileName) {
-        //Always expecting it to be in /mysql folder and in caps
         CSVReader csvReader = null;
         try {
-            csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName.toUpperCase() + ".csv"));
+            if(System.getProperty("os.name").contains("Windows")) {
+                csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName.toLowerCase() + ".csv"));
+            }
+            else {
+                csvReader = new CSVReader(new FileReader(fileLocation + "/" + fileName.toLowerCase() + ".csv"));
+            }
             String[] nextLine;
             if ((nextLine = csvReader.readNext()) != null) {
                 //return first line
@@ -52,10 +56,10 @@ public class CSVUtil {
         CSVReader csvReader = null;
         try {
             if(System.getProperty("os.name").contains("Windows")) {
-                csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName + ".csv"));
+                csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName.toLowerCase() + ".csv"));
             }
             else {
-                csvReader = new CSVReader(new FileReader(fileLocation + "/" + fileName + ".csv"));
+                csvReader = new CSVReader(new FileReader(fileLocation + "/" + fileName.toLowerCase() + ".csv"));
             }
             String[] nextLine;
             if ((nextLine = csvReader.readNext()) != null) {
@@ -85,10 +89,10 @@ public class CSVUtil {
         List<String[]> content = new ArrayList<>();
         try {
             if(System.getProperty("os.name").contains("Windows")) {
-                csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName + ".csv"));
+                csvReader = new CSVReader(new FileReader(fileLocation + "\\" + fileName.toLowerCase() + ".csv"));
             }
             else {
-                csvReader = new CSVReader(new FileReader(fileLocation + "/" + fileName + ".csv"));
+                csvReader = new CSVReader(new FileReader(fileLocation + "/" + fileName.toLowerCase() + ".csv"));
             }
             String[] nextLine;
             if ((csvReader.readNext()) != null) {  //Skip first line

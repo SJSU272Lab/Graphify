@@ -28,7 +28,7 @@ public class ConvertTest {
     private static final ClassLoader CLASS_LOADER = ConvertTest.class.getClassLoader();
 
     public static void main(String[] args) throws JsonProcessingException {
-        String graphName = "testgraphschema8";
+        String graphName = "testgraphschema9";
         GraphSchema graphSchema = convert();
         System.out.print(ConvertTest.class.getName() + " Converted schema\n " + new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(graphSchema));
         createGraphAndSchema(graphSchema, graphName);
@@ -43,7 +43,7 @@ public class ConvertTest {
         Schema schema = (Schema) dbService.getSchema(DB_URL, DB_SCHEMA).getEntity();
         //System.out.println(test.getClass().getCanonicalName() + " " + schema);
         IBMGraphClient client = new IBMGraphClient();
-        GraphSchema graphSchema = client.getGraphSchema("testgraphschema8");
+        GraphSchema graphSchema = client.getGraphSchema("testgraphschema9");
         //System.out.println(ConvertTest.class.getCanonicalName() + " " +graphSchema);
         Mapper mapper = new Mapper(schema);
 
