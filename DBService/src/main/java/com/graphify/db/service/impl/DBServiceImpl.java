@@ -17,7 +17,7 @@ import com.graphify.db.service.DBService;
 import com.graphify.db.util.CSVUtil;
 import com.graphify.db.util.Mapper;
 import com.graphify.db.util.ServiceUtil;
-import com.sun.corba.se.impl.orbutil.graph.Graph;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -30,11 +30,11 @@ import java.util.Map;
 public class DBServiceImpl implements DBService {
 
     private static final DBDao dbDao = new MySQLDaoImpl();
-
+    private static final Logger LOGGER = Logger.getLogger(DBServiceImpl.class);
     @Override
     public Schema getDBSchema(String url, String schemaName) {
         Schema schema = dbDao.getSchema(DaoUtil.getConnection(url), schemaName);
-        //System.out.println(schema);
+        //LOGGER.info(schema);
         return schema;
     }
 
@@ -46,7 +46,7 @@ public class DBServiceImpl implements DBService {
         for (Table table : schema.getTables()) {
             String[] header = CSVUtil.getHeaderFromSource(fileLocation, table.getName());
             if (header == null) {
-                //System.out.println(DBService.class.getCanonicalName() + " Got null ");
+                //LOGGER.info(DBService.class.getCanonicalName() + " Got null ");
                 validate.setMessage("Could not find valid CSV for table '" + table.getName() + "'");
                 validate.setValid(false);
                 return validate;
@@ -89,6 +89,7 @@ public class DBServiceImpl implements DBService {
         createGraphAndSchema(graphSchema, graphName);
         String command = addDataUsingMapper(url, schemaName, fileLocation, graphName);
         addData(graphName, command);
+        graphSchema.setGraphName(graphName);
         return graphSchema;
     }
 
@@ -109,12 +110,11 @@ public class DBServiceImpl implements DBService {
         Schema schema = getDBSchema(url, schemaName);
         IBMGraphClient client = new IBMGraphClient();
         GraphSchema graphSchema = client.getGraphSchema(graphName);
-        System.out.println(DBServiceImpl.class.getCanonicalName() + " " + graphSchema);
         Mapper mapper = new Mapper(schema);
 
         for (String tableName : mapper.getMapData().keySet()) {
             Table table = ServiceUtil.getMySQLTableByName(tableName, schema);
-            //System.out.println(test.getClass().getCanonicalName() + " Got table " + table.getName());
+            //LOGGER.info(test.getClass().getCanonicalName() + " Got table " + table.getName());
             Boolean needsEdge = false;
             List<Constraint> foreignConstraints = ServiceUtil.getForeignKeys(table);
 
@@ -133,7 +133,7 @@ public class DBServiceImpl implements DBService {
                 List<String[]> tableContent = CSVUtil.getContent(fileLocation, tableName);
                 for (String[] row : tableContent) {
                     String vertexName = addVertex(mapper.getTableVertexMap().get(tableName), row, columnIndex, mapper.getMapData().get(tableName), graphSchema, table, commandString);
-                    //System.out.println(ConvertTest.class.getCanonicalName() + " needsEdge " +needsEdge);
+                    //LOGGER.info(ConvertTest.class.getCanonicalName() + " needsEdge " +needsEdge);
                     if (needsEdge) {
                         addEdge(foreignConstraints, vertexName, row, mapper.getEdges(), schema, columnIndex, commandString);
                     }
@@ -145,18 +145,18 @@ public class DBServiceImpl implements DBService {
 
     private void addEdge(List<Constraint> foreignConstraints, String vertexName, String[] row, Map<String, String> edgeNames, Schema schema, Map<String, Integer> columnIndex, StringBuffer commandString) {
         for (Constraint constraint : foreignConstraints) {
-            //System.out.println(ConvertTest.class.getCanonicalName() + " For vertex " + vertexName);
+            //LOGGER.info(ConvertTest.class.getCanonicalName() + " For vertex " + vertexName);
             String edgeName = edgeNames.get(constraint.getName());
-            //System.out.println(ConvertTest.class.getCanonicalName() + " For edge name " + edgeName);
+            //LOGGER.info(ConvertTest.class.getCanonicalName() + " For edge name " + edgeName);
             StringBuffer command = new StringBuffer();
             if (edgeName != null && !edgeName.isEmpty()) {
                 command.append(vertexName).append(".addEdge('").append(edgeName).append("',");
                 if (isForeignPrimaryOfSource(constraint, schema)) {
-                    //System.out.println(ConvertTest.class.getCanonicalName() +   " Row data " + row[columnIndex.get(constraint.getColumn())]);
+                    //LOGGER.info(ConvertTest.class.getCanonicalName() +   " Row data " + row[columnIndex.get(constraint.getColumn())]);
                     command.append(constraint.getRefTable().toLowerCase()).append("_").append(row[columnIndex.get(constraint.getColumn().toLowerCase())]).append(");");
                 }
             }
-            //System.out.println(command);
+            //LOGGER.info(command);
             commandString.append(command).append("\n");
         }
     }
@@ -172,7 +172,7 @@ public class DBServiceImpl implements DBService {
             for (Constraint primary : primaries) {
                 //Just to be sure applying toLower
                 if (refColumn.toLowerCase().equals(primary.getColumn().toLowerCase())) {
-                    //System.out.println(ConvertTest.class.getCanonicalName() + " Got primary ");
+                    //LOGGER.info(ConvertTest.class.getCanonicalName() + " Got primary ");
                     return true;
                 }
             }
@@ -190,7 +190,7 @@ public class DBServiceImpl implements DBService {
             String propertyName = columnMap.get(column);
             Property property = ServiceUtil.getPropertyByName(propertyName, graphSchema);
             String propertyDataType = property.getDataType();
-            //System.out.println( ConvertTest.class.getCanonicalName() + " Got index of column " + column + " as "+ columnIndex.get(column));
+            //LOGGER.info( ConvertTest.class.getCanonicalName() + " Got index of column " + column + " as "+ columnIndex.get(column));
             String value = row[columnIndex.get(column)];
             //TODO: Date also needs special attention, ticket raised with IBM about it
 
@@ -208,7 +208,7 @@ public class DBServiceImpl implements DBService {
         }
         result.append(");");
         String command = "def " + varName + " = " + result;
-        //System.out.println(command);
+        //LOGGER.info(command);
         commandString.append(command).append("\n");
         return varName.toString();
     }
@@ -221,7 +221,7 @@ public class DBServiceImpl implements DBService {
                 primaries += "_" + constraint.getColumn().toLowerCase();
             }
         }
-        String varPattern = table.getName() + primaries;
+        String varPattern = table.getName().toLowerCase() + primaries;
         return varPattern;
     }
 
@@ -230,7 +230,7 @@ public class DBServiceImpl implements DBService {
         DBServiceImpl dbService = new DBServiceImpl();
         String url = "jdbc:mysql://localhost:3306/expense?user=root&password=admin";
         Validate validate = dbService.validateSchema(url, "expense", "D:/DevEnv/Fall16-Team12/DBService/src/main/resources/mysql");
-        System.out.println(DBServiceImpl.class.getCanonicalName() + validate);
+        LOGGER.info(DBServiceImpl.class.getCanonicalName() + validate);
 
     }
 }

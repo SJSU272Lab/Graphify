@@ -1,5 +1,7 @@
 package com.graphify.db.model.ibm.graph;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +10,14 @@ import java.util.List;
  * Created by Sushant on 22-11-2016.
  */
 @XmlRootElement
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GraphSchema {
     private List<Property> propertyKeys;
     private List<Vertex> vertexLabels;
     private List<Edge> edgeLabels;
     private List<Index> vertexIndexes;
     private List<Index> edgeIndexes;
+    private String graphName;
 
     public GraphSchema() {
     }
@@ -64,6 +68,14 @@ public class GraphSchema {
 
     public void setEdgeIndexes(List<Index> edgeIndexes) {
         this.edgeIndexes = edgeIndexes;
+    }
+
+    public String getGraphName() {
+        return graphName;
+    }
+
+    public void setGraphName(String graphName) {
+        this.graphName = graphName;
     }
 
     @Override

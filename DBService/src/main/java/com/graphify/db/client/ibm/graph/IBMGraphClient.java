@@ -12,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ public class IBMGraphClient {
     private String password = null;
     private String basicAuth = null;
     private String gdsTokenAuth = null;
+    private static Logger LOGGER = Logger.getLogger(IBMGraphClient.class);
 
 
     private void initialize()
@@ -123,6 +125,7 @@ public class IBMGraphClient {
 
     public void addData(String graphName, String command) {
        String postEntity = "{\"gremlin\":\"".concat(command).concat("\"}").replaceAll("(\\r|\\n)", "");
+        LOGGER.info(command);
         initialize();
         try {
             apiURL = restifyURL + "/"+graphName+"/gremlin";

@@ -99,7 +99,7 @@ public class FileController {
 
         LocalClient localClient = new LocalClient();
         GraphSchema graphSchema = localClient.conAdd(databaseCredentials.getUrl(), databaseCredentials.getOutputDir(), databaseCredentials.getDb());
-
+        logger.info("Graph name => " + graphSchema.getGraphName());
         logger.info(graphSchema);
 
 

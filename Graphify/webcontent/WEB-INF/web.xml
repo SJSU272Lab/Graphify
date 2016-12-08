@@ -33,15 +33,15 @@
     
     <context-param>
         <param-name>BaseUrl</param-name>
-        <param-value>
+        <!--<param-value>
             http://localhost:8080/graphify/
-        </param-value>
+        </param-value>-->
           <!--<param-value>
               http://graphify-64145313.3e92ad2e.svc.dockerapp.io:8080/graphify/
           </param-value>-->
-        <!--<param-value>
+        <param-value>
             http://192.168.99.100:8080/graphify/
-        </param-value>-->
+        </param-value>
     </context-param>
     
 </web-app>
