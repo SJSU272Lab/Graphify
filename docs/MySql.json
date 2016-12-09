@@ -1,0 +1,199 @@
+{
+  "name": "expense",
+  "tables": [
+    {
+      "columns": [
+        {
+          "name": "ENTITY_ID",
+          "nullable": false,
+          "type": "int"
+        },
+        {
+          "name": "NAME",
+          "nullable": false,
+          "type": "varchar"
+        },
+        {
+          "name": "EMAIL",
+          "nullable": false,
+          "type": "varchar"
+        }
+      ],
+      "constraints": [
+        {
+          "column": "ENTITY_ID",
+          "name": "PRIMARY",
+          "type": "PRIMARY KEY"
+        }
+      ],
+      "indexes": [
+        {
+          "cardinality": 47,
+          "column": "ENTITY_ID",
+          "indexName": "PRIMARY",
+          "unique": true
+        }
+      ],
+      "name": "entity"
+    },
+    {
+      "columns": [
+        {
+          "name": "EXPENSE_ID",
+          "nullable": false,
+          "type": "int"
+        },
+        {
+          "name": "ENTITY_ID",
+          "nullable": false,
+          "type": "int"
+        },
+        {
+          "name": "EXPENSE_CATEGORY_ID",
+          "nullable": false,
+          "type": "int"
+        },
+        {
+          "name": "ITEM_DESCR",
+          "nullable": false,
+          "type": "varchar"
+        },
+        {
+          "name": "ITEM_LINK",
+          "nullable": true,
+          "type": "varchar"
+        },
+        {
+          "name": "ESTIMATED_COST",
+          "nullable": false,
+          "type": "int"
+        },
+        {
+          "name": "SUBMIT_DATE",
+          "nullable": false,
+          "type": "date"
+        },
+        {
+          "name": "STATUS_ID",
+          "nullable": false,
+          "type": "int"
+        }
+      ],
+      "constraints": [
+        {
+          "column": "EXPENSE_ID",
+          "name": "PRIMARY",
+          "type": "PRIMARY KEY"
+        },
+        {
+          "column": "ENTITY_ID",
+          "name": "expense_ibfk_1",
+          "refColumn": "ENTITY_ID",
+          "refTable": "entity",
+          "type": "FOREIGN KEY"
+        },
+        {
+          "column": "EXPENSE_CATEGORY_ID",
+          "name": "expense_ibfk_2",
+          "refColumn": "EXPENSE_CATEGORY_ID",
+          "refTable": "expense_category",
+          "type": "FOREIGN KEY"
+        },
+        {
+          "column": "STATUS_ID",
+          "name": "expense_ibfk_3",
+          "refColumn": "STATUS_ID",
+          "refTable": "status",
+          "type": "FOREIGN KEY"
+        }
+      ],
+      "indexes": [
+        {
+          "cardinality": 40,
+          "column": "EXPENSE_ID",
+          "indexName": "PRIMARY",
+          "unique": true
+        },
+        {
+          "cardinality": 40,
+          "column": "ENTITY_ID",
+          "indexName": "ENTITY_ID",
+          "unique": false
+        },
+        {
+          "cardinality": 3,
+          "column": "EXPENSE_CATEGORY_ID",
+          "indexName": "EXPENSE_CATEGORY_ID",
+          "unique": false
+        },
+        {
+          "cardinality": 1,
+          "column": "STATUS_ID",
+          "indexName": "STATUS_ID",
+          "unique": false
+        }
+      ],
+      "name": "expense"
+    },
+    {
+      "columns": [
+        {
+          "name": "EXPENSE_CATEGORY_ID",
+          "nullable": false,
+          "type": "int"
+        },
+        {
+          "name": "EXP_CAT_DESCR",
+          "nullable": false,
+          "type": "varchar"
+        }
+      ],
+      "constraints": [
+        {
+          "column": "EXPENSE_CATEGORY_ID",
+          "name": "PRIMARY",
+          "type": "PRIMARY KEY"
+        }
+      ],
+      "indexes": [
+        {
+          "cardinality": 3,
+          "column": "EXPENSE_CATEGORY_ID",
+          "indexName": "PRIMARY",
+          "unique": true
+        }
+      ],
+      "name": "expense_category"
+    },
+    {
+      "columns": [
+        {
+          "name": "STATUS_ID",
+          "nullable": false,
+          "type": "int"
+        },
+        {
+          "name": "STATUS_DESCR",
+          "nullable": false,
+          "type": "varchar"
+        }
+      ],
+      "constraints": [
+        {
+          "column": "STATUS_ID",
+          "name": "PRIMARY",
+          "type": "PRIMARY KEY"
+        }
+      ],
+      "indexes": [
+        {
+          "cardinality": 4,
+          "column": "STATUS_ID",
+          "indexName": "PRIMARY",
+          "unique": true
+        }
+      ],
+      "name": "status"
+    }
+  ]
+}
