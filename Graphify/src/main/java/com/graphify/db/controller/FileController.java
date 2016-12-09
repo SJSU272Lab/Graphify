@@ -30,22 +30,23 @@ public class FileController {
     private DatabaseCredentials databaseCredentials;
 
     @RequestMapping(value = "/validate", method = RequestMethod.POST, produces = {"application/json"})
-    public @ResponseBody HashMap<String, Object> validate(MultipartHttpServletRequest request,
-                                                          HttpServletResponse response) throws Exception {
+    public
+    @ResponseBody
+    HashMap<String, Object> validate(MultipartHttpServletRequest request,
+                                     HttpServletResponse response) throws Exception {
         logger.info("In controller");
         MultipartFile multipartFile = request.getFile("file");
         Long size = multipartFile.getSize();
         String contentType = multipartFile.getContentType();
         InputStream stream = multipartFile.getInputStream();
         File file;
-        if(System.getProperty("os.name").contains("Windows")) {
+        if (System.getProperty("os.name").contains("Windows")) {
             file = new File("D:\\" + multipartFile.getOriginalFilename());
-        }
-        else {
+        } else {
             file = new File("/usr/local/" + multipartFile.getOriginalFilename());
         }
         multipartFile.transferTo(file);
-        logger.info("file "+ file.getAbsolutePath());
+        logger.info("file " + file.getAbsolutePath());
 
 
         String host = request.getParameter("host");
@@ -57,12 +58,12 @@ public class FileController {
         String url = "jdbc:mysql://%s:%s/%s?user=%s&password=%s&autoReconnect=true&useSSL=false";
         url = String.format(url, host, port, db, user, pass);
 
-        logger.info(url +" file "+ file.getAbsolutePath());
+        logger.info(url + " file " + file.getAbsolutePath());
         String outputDir;
-        if(System.getProperty("os.name").contains("Windows"))
-            outputDir = "D:\\readDir\\"+ Long.toString(System.currentTimeMillis());
+        if (System.getProperty("os.name").contains("Windows"))
+            outputDir = "D:\\readDir\\" + Long.toString(System.currentTimeMillis());
         else
-            outputDir = "/usr/local/readDir/"+ Long.toString(System.currentTimeMillis());
+            outputDir = "/usr/local/readDir/" + Long.toString(System.currentTimeMillis());
 
         ZipUtil.unZipIt(file.getAbsolutePath(), outputDir);
 
@@ -94,17 +95,27 @@ public class FileController {
     }
 
     @RequestMapping(value = "/conadd", method = RequestMethod.POST, produces = {"application/json"})
-    public @ResponseBody HashMap<String, Object> convert(HttpServletRequest request,
-                                                          HttpServletResponse response) throws Exception {
+    public
+    @ResponseBody
+    HashMap<String, Object> convert(MultipartHttpServletRequest request,
+                                    HttpServletResponse response) throws Exception {
 
         LocalClient localClient = new LocalClient();
         GraphSchema graphSchema = localClient.conAdd(databaseCredentials.getUrl(), databaseCredentials.getOutputDir(), databaseCredentials.getDb());
         logger.info("Graph name => " + graphSchema.getGraphName());
         logger.info(graphSchema);
 
+        MultipartFile multipartFile = request.getFile("file");
+        Long size = multipartFile.getSize();
+        String contentType = multipartFile.getContentType();
+        InputStream stream = multipartFile.getInputStream();
+        byte[] bytes = IOUtils.toByteArray(stream);
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("contenttype",  request.getContentType());
+        map.put("fileoriginalsize", size);
+        map.put("contenttype", contentType);
+        map.put("base64", new String(Base64Utils.encode(bytes)));
+        map.put("convertMessage", graphSchema.getGraphName());
 
         return map;
     }

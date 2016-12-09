@@ -1,11 +1,11 @@
 package com.graphify.db.util;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Sohrab-PC on 12/4/2016.
  */
-@Component
+@Service
 public class DatabaseCredentials {
 
     private String host;

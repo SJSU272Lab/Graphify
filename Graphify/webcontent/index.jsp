@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-
 <%String baseUrl = getServletContext().getInitParameter("BaseUrl");%>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +41,7 @@
 
         $(document).ready(function () {
             var file = $('[name="file"]');
-            var imgContainer = $('#imgContainer');
+            /*var imgContainer = $('#imgContainer');*/
 
             $('#btnUpload').on('click', function () {
                 var filename = $.trim(file.val());
@@ -58,14 +57,13 @@
                     data: new FormData(document.getElementById("fileForm")),
                     enctype: 'multipart/form-data',
                     processData: false,
-                    contentType: false
+                    contentType: false,
+                    async : false,
                 }).done(function (data) {
-                    //imgContainer.html('');
-                    var result = "Server returned with Message : " + data.message + " .";
 
-                    /*$('#ReturnMessage').text(result);*/
-                    //imgContainer.append(result);
                     if(data.isValid == true){
+                        var result = "Validation successful";
+                        $('#ReturnMessage').text(result);
                         document.getElementById("btnUpload").disabled = true;
                         document.getElementById("btnConvert").disabled = false;
 
@@ -76,18 +74,23 @@
                                 data: new FormData(document.getElementById("fileForm")),
                                 enctype: 'multipart/form-data',
                                 processData: false,
-                                contentType: false
-                            }).done(function (data) {
-
-
-                            }).fail(function (jqXHR, textStatus) {
-                                //alert(jqXHR.responseText);
-                                alert('Convert failed ...');
+                                contentType: false,
+                                async : false,
+                                success: function (returndata) {
+                                    var returnresult = "Conversion successful. Graph name : " + returndata.convertMessage;
+                                    $('#ConvertMessage').text(returnresult);
+                                    document.getElementById("btnConvert").disabled = true;
+                                },
+                                error: function (e) {
+                                    var returnresult = "Conversion failed. Please try again !";
+                                    $('#ConvertMessage').text(returnresult);
+                                }
                             });
                         });
-
-                    } else {
-                        alert('Database not validated');
+                    }
+                    else {
+                        var result = "Validation failed : " + data.message;
+                        $('#ReturnMessage').text(result);
                     }
 
                 }).fail(function (jqXHR, textStatus) {
@@ -95,11 +98,6 @@
                     alert('File upload failed ...'+ '<%=baseUrl%>api/validate');
                 });
 
-            });
-
-            $('#btnClear').on('click', function () {
-                imgContainer.html('');
-                file.val('');
             });
         });
 
@@ -189,8 +187,8 @@
                         <i class="fa fa-flask"></i>
                     </div>
                     <div class="service-info">
-                        <h3><a href="http://google.com">Create Your DB</a></h3>
-                        <p>Build you own GraphDB along with the vizulization of the same.</p>
+                        <h3><a href="#">Create Your DB</a></h3>
+                        <p>Build you own GraphDB along with the visualisation of the same</p>
                     </div>
                 </div>
                 <div class="col-sm-4 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="450ms">
@@ -225,14 +223,17 @@
                                         <input type="file" class="dropzone needsclick dz-clickable" id="demo-upload"
                                                name="file">
                                         <div class="dz-message needsclick">
-                                            Drop database files here or click to upload.<br>
+                                            Upload mysql dump zip file<br>
                                             <span class="note needsclick">(Please do <strong>not</strong> upload any other type of file)</span>
                                         </div>
                                     </div>
-                                    <a id="ReturnMessage" />
+
                                     <button id="btnUpload" data-inline="true">Validate</button>
                                     <button id="btnConvert" data-inline="true" disabled>Convert</button>
-                                    <div id="imgContainer"></div>
+                                    <br>
+                                    <p id="ReturnMessage" />
+                                    <br>
+                                    <p id="ConvertMessage" />
                                 </div>
                             </form>
                         </div>
@@ -243,7 +244,7 @@
                         <i class="fa fa-cloud"></i>
                     </div>
                     <div class="service-info">
-                        <h3>Learn more about GraphDB</h3>
+                        <h3><a href="#">Learn more about GraphDB</a></h3>
                         <p>Want to learn more check out some links to learn more about GraphDB</p>
                     </div>
                 </div>
