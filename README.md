@@ -45,7 +45,7 @@ PS: Make sure that the deployed application has access to the MySQL server hosti
 
 
 #Demo and resources
-Watch demo here<br />
+[Watch demo here](https://youtu.be/PvrVJRi689w) <br />
 [MySQL create script](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/create.sql) <br />
 [MySQL sample dump](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/entity.zip) <br />
 
