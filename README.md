@@ -1,4 +1,4 @@
-# Graphify
+# [Graphify](http://graphify-64145313.3e92ad2e.svc.dockerapp.io:8080/graphify/)
 
 #Abstract
 
@@ -48,6 +48,27 @@ PS: Make sure that the deployed application has access to the MySQL server hosti
 [Watch demo here](https://youtu.be/PvrVJRi689w) <br />
 [MySQL create script](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/create.sql) <br />
 [MySQL sample dump](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/entity.zip) <br />
+
+#Validate conversion
+Once the conversion is done as shown in the demo to validate the conversion you may use IBM Graph's [Gremlin API](https://ibm-graph-docs.ng.bluemix.net/api.html#gremlin-apis) <br />
+Make a post request using below details <br/>
+Post URL = https://ibmgraph-alpha.ng.bluemix.net/cbdaceb1-6e60-4378-bfc5-d0cbd1f24b49/{graph_name}/gremlin <br />
+Headers = {"Content-Type": ["application/json"], "Authorization":["Basic NGZhZTZhMTYtYzVlMy00ZTljLTk5MGItMmQ3ZmNmNzczMzY5OmQ4NjMxMmY5LTlhN2QtNDllMi05ZWVkLTRlNDc1NTU3YjQ0ZA=="]} <br />
+Sample request body = 
+```json
+{
+    "gremlin":
+        "def gt = graph.traversal();gt.V().hasLabel(\"status\").has(\"status_id\", \"1\").inE(\"refers_status\").outV().path();"
+}
+```
+
+__PS:__ _graph_name_ is the name of the graph you get once the DB is converted successfully.  <br />
+_graph_name_ for the above demo video would be 1481581976977 <br />
+
+
+Website: http://graphify-64145313.3e92ad2e.svc.dockerapp.io:8080/graphify/ <br />
+Contact us: sushant.vairagade@sjsu.edu, sohrab.ali@sjsu.edu, nakshatra@sjsu.edu, swathi.koduri@sjsu.edu
+
 
 #Contributors
 1. [Sushant Vairagade](https://github.com/sjsu-sushant)
