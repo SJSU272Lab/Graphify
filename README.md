@@ -9,7 +9,7 @@ Graph theory of storage is becoming de facto solution to today’s need of handl
 1. As a user I want to be able to migrate my existing relational DB to Graph DB
 2. As a user with no DB background I want to be able to create new Graph DB just by using drag and drop utilities
 
-Flow diag:
+#Flow diagram
 
 ![Version 2](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/flow_diag_v2.jpg)
 
@@ -20,7 +20,7 @@ There is no one correct one way of designing a database schema even if you follo
 Migrating relational DB to other relation DB (MySQL to Oracle) is pretty straight forward, whereas it is not the case with migrating realtional DB to Graph. Graphify provides one basic strategy defined that helps you migrate to Graph using the foreign keys defined in your relational schema. Below is the example of how it works:<br />
 Consider a simple 'expense' DB schema:
 
-![ER Diag](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/ER_Diagram.png)
+![ER Diagram](https://github.com/SJSU272Lab/Fall16-Team12/blob/master/docs/ER_Diagram.png)
 
 
 
